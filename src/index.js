@@ -39,6 +39,9 @@ function Footer(props = {}) {
     tag: "footer",
     options: {
       classList: "footer",
+      style: {
+        display: count ? "block" : "none",
+      },
       children: [
         {
           tag: "span",
