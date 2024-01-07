@@ -3,7 +3,7 @@ import Paradox from "penrose-paradox"
 
 import { sayHello } from "./js/utils";
 
-function Main() {
+function Main(props = {}) {
   const raw = {
     tag: "section",
     options: {
@@ -117,5 +117,10 @@ function Footer(props = {}) {
     element,
   }
 }
+
+const root = document.querySelector("#root");
+root.innerHTML = "";
+root.appendChild(Main().element);
+root.appendChild(Footer().element);
 
 console.log(sayHello("Hello"));
