@@ -20,14 +20,16 @@ function ListItem(props = {}) {
                 tag: "input",
                 options: {
                   classList: "toggle",
-                  type: "checkbox",
-                  checked: completed,
+                  attributes: {
+                    type: "checkbox",
+                    checked: completed,
+                  },
                 },
               },
               {
                 tag: "label",
                 options: {
-                  textContent: title,
+                  text: title,
                 },
               },
               {
@@ -43,7 +45,9 @@ function ListItem(props = {}) {
           tag: "input",
           options: {
             classList: "edit",
-            value: title,
+            attributes: {
+              value: title,
+            },
           },
         },
       ],
@@ -72,7 +76,7 @@ function Main(props = {}) {
         {
           tag: "ul",
           options: {
-            classList: "main__list",
+            classList: "todo-list",
             children: tasks.map((task) => ListItem(task).raw),
           },
         },
@@ -233,4 +237,6 @@ Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
   render(data);
 });
 
-render(data);
+document.addEventListener("DOMContentLoaded", () => {
+  render(data);
+});
