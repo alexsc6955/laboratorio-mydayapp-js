@@ -238,7 +238,6 @@ function generateRandomNumber() {
 }
 
 function render(data) {
-  console.log(data);
   // if (data.tasks && data.tasks.length) data.count = data.tasks.length;
 
   const root = document.querySelector("#root");
@@ -263,6 +262,7 @@ function render(data) {
   }
 
   const newTodo = document.querySelector("#new-todo");
+  newTodo.removeEventListener("change", handleNewTodoChange);
   newTodo.addEventListener("change", handleNewTodoChange);
 
   // console.log(sayHello("Hello"));
