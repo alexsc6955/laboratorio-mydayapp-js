@@ -295,7 +295,9 @@ function render(data) {
 }
 
 function handleNewTodoChange(ev) {
-  const { value:title } = ev.target;
+
+  const { value:title, key } = ev.target;
+  if (key !== "Enter") return;
   if (!title) return;
   const id = `${Date.now()}-${generateRandomNumber()}`;
   const todo = {
@@ -313,7 +315,7 @@ function handleNewTodoChange(ev) {
 }
 
 const newTodo = document.querySelector("#new-todo");
-newTodo.addEventListener("change", handleNewTodoChange);
+newTodo.addEventListener("keyup", handleNewTodoChange);
 
 Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
   console.log(data);
