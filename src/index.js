@@ -2,6 +2,7 @@ import "./css/base.css";
 import Paradox from "penrose-paradox"
 
 import { sayHello } from "./js/utils";
+import pubsub from "penrose-paradox/src/core/pubsub";
 
 function ListItem(props = {}) {
   const { id, title, completed } = props
@@ -245,28 +246,27 @@ function render(data) {
   root.appendChild(Main(data).element);
   root.appendChild(Footer(data).element);
 
-  function handleNewTodoChange(ev) {
-    const { value:title } = ev.target;
-    if (!title) return;
-    const id = `${Date.now()}-${generateRandomNumber()}`;
-    const todo = {
-      id,
-      title,
-      completed: false,
-    };
-    const newData = setData({
-      tasks: [...data?.tasks || [], todo],
-      count: data?.count + 1 || 1,
-    });
-    Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
-  }
-
-  const newTodo = document.querySelector("#new-todo");
-  newTodo.removeEventListener("change", handleNewTodoChange);
-  newTodo.addEventListener("change", handleNewTodoChange);
-
   // console.log(sayHello("Hello"));
 }
+
+function handleNewTodoChange(ev) {
+  const { value:title } = ev.target;
+  if (!title) return;
+  const id = `${Date.now()}-${generateRandomNumber()}`;
+  const todo = {
+    id,
+    title,
+    completed: false,
+  };
+  const newData = setData({
+    tasks: [...data?.tasks || [], todo],
+    count: data?.count + 1 || 1,
+  });
+  Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
+}
+
+const newTodo = document.querySelector("#new-todo");
+newTodo.addEventListener("change", handleNewTodoChange);
 
 Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
   console.log(data);
