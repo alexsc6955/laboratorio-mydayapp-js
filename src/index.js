@@ -99,6 +99,7 @@ function ListItem(props = {}) {
   }
 }
 
+// Main component
 function Main(props = {}) {
   const { tasks = [] } = props
 
