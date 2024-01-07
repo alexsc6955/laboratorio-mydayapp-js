@@ -309,6 +309,7 @@ function handleNewTodoChange(ev) {
     count: data?.count + 1 || 1,
   });
   Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
+  ev.target.value = "";
 }
 
 const newTodo = document.querySelector("#new-todo");
