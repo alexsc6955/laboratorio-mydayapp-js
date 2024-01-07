@@ -93,32 +93,18 @@ function ListItem(props = {}) {
 
 function Main(props = {}) {
   const { tasks = [] } = props
-
-  const raw = {
-    tag: "section",
-    options: {
-      classList: "main",
-      style: {
-        display: tasks.length ? "block" : "none",
-      },
-      children: [
-        {
-          tag: "ul",
-          options: {
-            classList: "todo-list",
-            children: tasks.map((task) => ListItem(task).raw),
-          },
-        },
-      ],
-    }
+  const main = document.querySelector("#main");
+  if (!tasks.length) {
+    main.style.display = "none";
+    return;
   }
 
-  const element = Paradox.buildElement(raw.tag, raw.options)
-
-  return {
-    raw,
-    element,
-  }
+  const list = main.querySelector("ul");
+  list.innerHTML = "";
+  tasks.forEach((task) => {
+    const item = ListItem(task).element;
+    list.appendChild(item);
+  });
 }
 
 function Footer(props = {}) {
@@ -289,9 +275,10 @@ function render(data) {
   data.pluralize = pluralize;
 
   const root = document.querySelector("#root");
-  root.innerHTML = "";
-  root.appendChild(Main(data).element);
-  root.appendChild(Footer(data).element);
+  Main(data)
+  // root.innerHTML = "";
+  // root.appendChild(.element);
+  // root.appendChild(Footer(data).element);
 }
 
 function handleNewTodoChange(ev) {
