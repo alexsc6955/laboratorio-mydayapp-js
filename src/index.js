@@ -121,7 +121,7 @@ function Main(props = {}) {
 }
 
 function Footer(props = {}) {
-  const { pluralize = () => null, count = 0 } = props
+  const { pluralize = () => null, count = 0, route = "#/" } = props
 
   const raw = {
     tag: "footer",
@@ -145,7 +145,7 @@ function Footer(props = {}) {
               {
                 tag: "span",
                 options: {
-                  text: ` ${pluralize("item", 0)} left`,
+                  text: ` ${pluralize("item", count)} left`,
                 },
               },
             ],
@@ -164,7 +164,7 @@ function Footer(props = {}) {
                       tag: "a",
                       options: {
                         href: "#/",
-                        textContent: "All",
+                        text: "All",
                         classList: "selected",
                       },
                     },
@@ -179,7 +179,7 @@ function Footer(props = {}) {
                       tag: "a",
                       options: {
                         href: "#/pending",
-                        textContent: "Compleated",
+                        text: "Compleated",
                       },
                     },
                   ],
@@ -193,7 +193,7 @@ function Footer(props = {}) {
                       tag: "a",
                       options: {
                         href: "#/completed",
-                        textContent: "Completed",
+                        text: "Completed",
                       },
                     },
                   ],
@@ -218,6 +218,11 @@ Paradox.pubsub.subscribe("mydayapp-js:store", (data) => {
   localStorage.setItem("mydayapp-js:store", JSON.stringify(data));
 });
 
+
+function pluralize(word, count) {
+  return count === 1 ? word : `${word}s`;
+}
+
 const initialData = {
   tasks: [],
   count: 0,
@@ -239,7 +244,7 @@ function generateRandomNumber() {
 }
 
 function render(data) {
-  // if (data.tasks && data.tasks.length) data.count = data.tasks.length;
+  data.pluralize = pluralize;
 
   const root = document.querySelector("#root");
   root.innerHTML = "";
