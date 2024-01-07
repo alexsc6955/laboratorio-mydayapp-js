@@ -2,6 +2,23 @@ import "./css/base.css";
 
 import Paradox from "penrose-paradox"
 
+const eventListeners = new WeakMap();
+function bindEvent(element, eventName, handler) {
+  // Retrieve or create the event listeners Map for this particular element
+  let elementEvents = eventListeners.get(element);
+  if (!elementEvents) {
+    elementEvents = new Map();
+    eventListeners.set(element, elementEvents);
+  }
+  // Remove existing event listener if present before adding a new one
+  if (elementEvents.has(eventName)) {
+    element.removeEventListener(eventName, elementEvents.get(eventName));
+  }
+  // Add new event listener and update the storage Map
+  element.addEventListener(eventName, handler);
+  elementEvents.set(eventName, handler);
+}
+
 // List item component
 function ListItem(props = {}) {
   const { id, title, completed } = props
@@ -59,7 +76,7 @@ function ListItem(props = {}) {
         document.removeEventListener("keyup", handleQuitEditing);
       }
     }
-    document.addEventListener("keyup", handleQuitEditing);
+    bindEvent(document, "keyup", handleQuitEditing);
 
     function handleEdit(ev) {
       console.log("handleEdit");
@@ -72,7 +89,6 @@ function ListItem(props = {}) {
       // Update data changing title
       const newData = setData({
         tasks: data.tasks.map((task) => {
-          console.log(task.id, id);
           if (task.id === id) {
             task.title = title;
           }
@@ -85,7 +101,7 @@ function ListItem(props = {}) {
     const input = item.querySelector(".edit");
     input.focus();
     input.setSelectionRange(input.value.length, input.value.length);
-    input.addEventListener("keyup", handleEdit);
+    bindEvent(input, "keyup", handleEdit);
   }
 
   function handleToggleEdit(ev) {
@@ -206,7 +222,7 @@ function Footer(props = {}) {
       } else {
         task.hidden = false;
       }
-      console.log(task);
+      console.log(1);
       return task;
     });
     const finaleData = setData({
@@ -241,7 +257,7 @@ function Footer(props = {}) {
     if (link.href === route) {
       link.classList.add("selected");
     }
-    link.addEventListener("click", handleFilter);
+    bindEvent(link, "click", handleFilter);
   });
 
   function handleClearCompleted() {
@@ -255,7 +271,7 @@ function Footer(props = {}) {
   clearCompleted.style.display = data.tasks.some((task) => task.completed)
     ? "block"
     : "none";
-  clearCompleted.addEventListener("click", handleClearCompleted);
+  bindEvent(clearCompleted, "click", handleClearCompleted);
 }
 
 // pluralize function
@@ -332,8 +348,7 @@ function handleCreateTodo(ev) {
 }
 
 // select new todo input and add event listener
-const newTodo = document.querySelector("#new-todo");
-document.addEventListener("keyup", handleCreateTodo);
+bindEvent(document, "keyup", handleCreateTodo);
 
 // subscribe to new todo event that renders the app
 Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
