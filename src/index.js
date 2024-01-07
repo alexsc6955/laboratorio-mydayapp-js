@@ -99,6 +99,8 @@ function Main(props = {}) {
     return;
   }
 
+  main.style.display = "block";
+
   const list = main.querySelector("ul");
   list.innerHTML = "";
   tasks.forEach((task) => {
@@ -137,6 +139,9 @@ function Footer(props = {}) {
     footer.style.display = "none";
     return;
   }
+
+  footer.style.display = "block";
+  
   const counter = footer.querySelector(".todo-count");
   counter.innerHTML = "";
   counter.appendChild(
