@@ -300,6 +300,7 @@ function render(data) {
 // storage subscription that saves data to localStorage
 Paradox.pubsub.subscribe("mydayapp-js:store", (data) => {
   localStorage.setItem("mydayapp-js:store", JSON.stringify(data));
+  localStorage.setItem("mydayapp-js", JSON.stringify(data.tasks));
 });
 
 // initial data
