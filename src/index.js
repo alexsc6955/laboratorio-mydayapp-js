@@ -19,6 +19,14 @@ function ListItem(props = {}) {
     Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
   }
 
+  function handleRemove() {
+    const newData = setData({
+      tasks: data.tasks.filter((task) => task.id !== id),
+      count: data.count - 1,
+    });
+    Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
+  }
+
   const raw = {
     tag: "li",
     options: {
@@ -52,6 +60,9 @@ function ListItem(props = {}) {
                 tag: "button",
                 options: {
                   classList: "destroy",
+                  events: {
+                    click: handleRemove,
+                  },
                 },
               },
             ],
