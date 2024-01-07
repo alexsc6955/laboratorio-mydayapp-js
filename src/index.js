@@ -4,10 +4,15 @@ import Paradox from "penrose-paradox"
 import { sayHello } from "./js/utils";
 
 function Main(props = {}) {
+  const { tasks = [] } = props
+
   const raw = {
     tag: "section",
     options: {
       classList: "main",
+      style: {
+        display: tasks.length ? "block" : "none",
+      },
       children: [
         {
           tag: "ul",
