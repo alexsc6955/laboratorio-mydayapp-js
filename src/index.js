@@ -274,7 +274,7 @@ function generateRandomNumber() {
 
 // render function
 function render(data) {
-  location.href = data.route;
+  history.pushState({}, null, data.route);
   data.pluralize = pluralize;
 
   Main(data)
