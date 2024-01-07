@@ -126,9 +126,14 @@ function Footer(props = {}) {
   }
 }
 
-const data = []
+Paradox.pubsub.subscribe("mydayapp-js:store", (data) => {
+  localStorage.setItem("mydayapp-js:store", JSON.stringify(data));
+});
+
+const data = JSON.parse(localStorage.getItem("mydayapp-js:store") || "{}")
 function setData(newData = {}) {
-  data.push(newData)
+  Object.assign(data, newData)
+  Paradox.pubsub.publish("mydayapp-js:store", data);
   return data
 }
 
@@ -140,11 +145,13 @@ function generateRandomNumber() {
   return Number(randomNumber);
 }
 
-function render() {
+function render(data) {
+  if (data.tasks && data.tasks.length) data.count = data.tasks.length;
+
   const root = document.querySelector("#root");
   root.innerHTML = "";
-  root.appendChild(Main().element);
-  root.appendChild(Footer().element);
+  root.appendChild(Main(data).element);
+  root.appendChild(Footer(data).element);
 
   function handleNewTodoChange(ev) {
     const { value:title } = ev.target;
@@ -155,7 +162,7 @@ function render() {
       title,
       completed: false,
     };
-    const data = setData(todo);
+    const data = setData({ tasks: [todo] });
     Paradox.pubsub.publish("mydayapp-js:new-todo", data);
   }
 
@@ -167,6 +174,7 @@ function render() {
 
 Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
   console.log(data);
+  render(data);
 });
 
-render();
+render(data);
