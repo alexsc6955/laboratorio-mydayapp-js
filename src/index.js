@@ -3,6 +3,61 @@ import Paradox from "penrose-paradox"
 
 import { sayHello } from "./js/utils";
 
+function ListItem(props = {}) {
+  const { id, title, completed } = props
+
+  const raw = {
+    tag: "li",
+    options: {
+      classList: completed ? "completed" : "",
+      children: [
+        {
+          tag: "div",
+          options: {
+            classList: "view",
+            children: [
+              {
+                tag: "input",
+                options: {
+                  classList: "toggle",
+                  type: "checkbox",
+                  checked: completed,
+                },
+              },
+              {
+                tag: "label",
+                options: {
+                  textContent: title,
+                },
+              },
+              {
+                tag: "button",
+                options: {
+                  classList: "destroy",
+                },
+              },
+            ],
+          },
+        },
+        {
+          tag: "input",
+          options: {
+            classList: "edit",
+            value: title,
+          },
+        },
+      ],
+    }
+  }
+
+  const element = Paradox.buildElement(raw.tag, raw.options)
+
+  return {
+    raw,
+    element,
+  }
+}
+
 function Main(props = {}) {
   const { tasks = [] } = props
 
@@ -18,6 +73,7 @@ function Main(props = {}) {
           tag: "ul",
           options: {
             classList: "main__list",
+            children: tasks.map((task) => ListItem(task).raw),
           },
         },
       ],
