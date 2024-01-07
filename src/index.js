@@ -3,7 +3,7 @@ import "./css/base.css";
 import Paradox from "penrose-paradox"
 
 function ListItem(props = {}) {
-  const { id, title, completed } = props
+  const { id, title, completed, status = "" } = props
 
   function handleToggle(ev) {
     const { checked } = ev.target;
@@ -11,6 +11,7 @@ function ListItem(props = {}) {
       tasks: data.tasks.map((task) => {
         if (task.id === id) {
           task.completed = checked;
+          task.status = checked ? "" : "pending";
         }
         return task;
       }),
@@ -93,16 +94,21 @@ function ListItem(props = {}) {
 
 function Main(props = {}) {
   const { tasks = [] } = props
-  const main = document.querySelector("#main");
+
+  const main = document.querySelector("#main"); // get main element
+  // hide main if there are no tasks
   if (!tasks.length) {
     main.style.display = "none";
     return;
   }
 
-  main.style.display = "block";
+  main.style.display = "block"; // show main (in case it was hidden before)
 
+  // get list element and clear it
   const list = main.querySelector("ul");
   list.innerHTML = "";
+
+  // add tasks to list
   tasks.forEach((task) => {
     const item = ListItem(task).element;
     list.appendChild(item);
@@ -190,6 +196,7 @@ function generateRandomNumber() {
   return Number(randomNumber);
 }
 
+// render function
 function render(data) {
   location.href = data.route;
   data.pluralize = pluralize;
@@ -251,7 +258,6 @@ const newTodo = document.querySelector("#new-todo");
 newTodo.addEventListener("keyup", handleCreateTodo);
 
 Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
-  console.log(data);
   render(data);
 });
 
