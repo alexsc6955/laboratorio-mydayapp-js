@@ -217,7 +217,12 @@ Paradox.pubsub.subscribe("mydayapp-js:store", (data) => {
   localStorage.setItem("mydayapp-js:store", JSON.stringify(data));
 });
 
-const data = JSON.parse(localStorage.getItem("mydayapp-js:store") || "{ tasks: [], count: 0 }")
+const initialData = {
+  tasks: [],
+  count: 0,
+};
+
+const data = JSON.parse(localStorage.getItem("mydayapp-js:store")) || initialData;
 function setData(newData = {}) {
   Object.assign(data, newData)
   Paradox.pubsub.publish("mydayapp-js:store", data);
@@ -233,7 +238,8 @@ function generateRandomNumber() {
 }
 
 function render(data) {
-  if (data.tasks && data.tasks.length) data.count = data.tasks.length;
+  console.log(data);
+  // if (data.tasks && data.tasks.length) data.count = data.tasks.length;
 
   const root = document.querySelector("#root");
   root.innerHTML = "";
@@ -249,17 +255,17 @@ function render(data) {
       title,
       completed: false,
     };
-    const data = setData({
-      tasks: [...data.tasks, todo],
-      count: data.count + 1,
+    const newData = setData({
+      tasks: [...data?.tasks || [], todo],
+      count: data?.count + 1 || 1,
     });
-    Paradox.pubsub.publish("mydayapp-js:new-todo", data);
+    Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
   }
 
   const newTodo = document.querySelector("#new-todo");
   newTodo.addEventListener("change", handleNewTodoChange);
 
-  console.log(sayHello("Hello"));
+  // console.log(sayHello("Hello"));
 }
 
 Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
@@ -267,6 +273,4 @@ Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
   render(data);
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  render(data);
-});
+render(data);
