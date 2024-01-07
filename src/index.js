@@ -128,7 +128,7 @@ function Footer(props = {}) {
     const newData = setData({
       route: href,
     });
-    const hideTasks = newData.tasks.map((task) => {
+    const changedTasks = newData.tasks.map((task) => {
       if (href.includes("#/pending")) {
         task.hidden = task.completed;
       } else if (href.includes("#/completed")) {
@@ -136,10 +136,11 @@ function Footer(props = {}) {
       } else {
         task.hidden = false;
       }
+      console.log(task);
       return task;
     });
     const finaleData = setData({
-      tasks: hideTasks,
+      tasks: changedTasks,
     });
     Paradox.pubsub.publish("mydayapp-js:new-todo", finaleData);
   }
