@@ -139,13 +139,13 @@ function Footer(props = {}) {
               {
                 tag: "strong",
                 options: {
-                  textContent: count,
+                  text: count,
                 },
               },
               {
                 tag: "span",
                 options: {
-                  textContent: ` ${pluralize("item", 0)} left`,
+                  text: ` ${pluralize("item", 0)} left`,
                 },
               },
             ],
