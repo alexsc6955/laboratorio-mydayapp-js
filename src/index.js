@@ -32,6 +32,9 @@ function ListItem(props = {}) {
     tag: "li",
     options: {
       classList: completed ? "completed" : "",
+      style: {
+        display: props.hidden ? "none" : "block",
+      },
       children: [
         {
           tag: "div",
@@ -265,6 +268,7 @@ function pluralize(word, count) {
 const initialData = {
   tasks: [],
   count: 0,
+  route: "#/",
 };
 
 const data = JSON.parse(localStorage.getItem("mydayapp-js:store")) || initialData;
@@ -283,6 +287,7 @@ function generateRandomNumber() {
 }
 
 function render(data) {
+  location.href = data.route;
   data.pluralize = pluralize;
 
   const root = document.querySelector("#root");
