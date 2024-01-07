@@ -6,8 +6,10 @@ import Paradox from "penrose-paradox"
 function ListItem(props = {}) {
   const { id, title, completed } = props
 
+  // Toggle completed handler
   function handleToggle(ev) {
     const { checked } = ev.target;
+    // Update data changing completed and status
     const newData = setData({
       tasks: data.tasks.map((task) => {
         if (task.id === id) {
@@ -17,17 +19,20 @@ function ListItem(props = {}) {
         return task;
       }),
     });
-    Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
+    Paradox.pubsub.publish("mydayapp-js:new-todo", newData); // Publish new data
   }
 
+  // Remove handler
   function handleRemove() {
+    // Update data removing task and decreasing count
     const newData = setData({
       tasks: data.tasks.filter((task) => task.id !== id),
       count: data.count - 1,
     });
-    Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
+    Paradox.pubsub.publish("mydayapp-js:new-todo", newData); // Publish new data
   }
 
+  // Prepare raw element tree for Paradox
   const raw = {
     tag: "li",
     options: {
@@ -85,6 +90,7 @@ function ListItem(props = {}) {
     }
   }
 
+  // Build element with Paradox
   const element = Paradox.buildElement(raw.tag, raw.options)
 
   return {
