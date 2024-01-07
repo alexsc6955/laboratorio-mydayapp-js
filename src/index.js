@@ -206,7 +206,6 @@ function render(data) {
   location.href = data.route;
   data.pluralize = pluralize;
 
-  const root = document.querySelector("#root");
   Main(data)
   Footer(data)
 }
