@@ -2,8 +2,9 @@ import "./css/base.css";
 
 import Paradox from "penrose-paradox"
 
+// List item component
 function ListItem(props = {}) {
-  const { id, title, completed, status = "" } = props
+  const { id, title, completed } = props
 
   function handleToggle(ev) {
     const { checked } = ev.target;
