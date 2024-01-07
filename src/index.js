@@ -123,6 +123,7 @@ function Main(props = {}) {
   });
 }
 
+// Footer component
 function Footer(props = {}) {
   const { pluralize = () => null, count = 0, route = "#/" } = props
 
@@ -191,11 +192,12 @@ function Footer(props = {}) {
   clearCompleted.addEventListener("click", handleClearCompleted);
 }
 
-
+// pluralize function
 function pluralize(word, count) {
-  return count === 1 ? word : `${word}s`;
+  return count === 1 ? word : `${word}s`; // add s if count is greater than 1
 }
 
+// generate random number
 function generateRandomNumber() {
   let randomNumber = "" + Math.floor(Math.random() * 9 + 1);
   for (let i = 0; i < 15; i++) {
@@ -235,6 +237,7 @@ function setData(newData = {}) {
   return data
 }
 
+// create todo handler
 function handleCreateTodo(ev) {
   const { target: { value:title }, key } = ev;
 
@@ -262,11 +265,13 @@ function handleCreateTodo(ev) {
   ev.target.value = ""; // clear input
 }
 
+// select new todo input and add event listener
 const newTodo = document.querySelector("#new-todo");
 newTodo.addEventListener("keyup", handleCreateTodo);
 
+// subscribe to new todo event that renders the app
 Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
   render(data);
 });
 
-render(data);
+render(data); // render app
