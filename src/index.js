@@ -142,7 +142,7 @@ function ListItem(props = {}) {
                 tag: "label",
                 options: {
                   events: {
-                    click: handleToggleEdit,
+                    dblclick: handleToggleEdit,
                   },
                   text: title,
                 },
