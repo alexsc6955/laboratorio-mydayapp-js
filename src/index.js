@@ -6,6 +6,19 @@ import { sayHello } from "./js/utils";
 function ListItem(props = {}) {
   const { id, title, completed } = props
 
+  function handleToggle(ev) {
+    const { checked } = ev.target;
+    const newData = setData({
+      tasks: data.tasks.map((task) => {
+        if (task.id === id) {
+          task.completed = checked;
+        }
+        return task;
+      }),
+    });
+    Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
+  }
+
   const raw = {
     tag: "li",
     options: {
@@ -20,6 +33,9 @@ function ListItem(props = {}) {
                 tag: "input",
                 options: {
                   classList: "toggle",
+                  events: {
+                    change: handleToggle,
+                  },
                   attributes: {
                     type: "checkbox",
                     checked: completed,
