@@ -217,7 +217,7 @@ Paradox.pubsub.subscribe("mydayapp-js:store", (data) => {
   localStorage.setItem("mydayapp-js:store", JSON.stringify(data));
 });
 
-const data = JSON.parse(localStorage.getItem("mydayapp-js:store") || "{}")
+const data = JSON.parse(localStorage.getItem("mydayapp-js:store") || "{ tasks: [], count: 0 }")
 function setData(newData = {}) {
   Object.assign(data, newData)
   Paradox.pubsub.publish("mydayapp-js:store", data);
@@ -249,7 +249,10 @@ function render(data) {
       title,
       completed: false,
     };
-    const data = setData({ tasks: [todo] });
+    const data = setData({
+      tasks: [...data.tasks, todo],
+      count: data.count + 1,
+    });
     Paradox.pubsub.publish("mydayapp-js:new-todo", data);
   }
 
