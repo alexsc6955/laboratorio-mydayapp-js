@@ -27,4 +27,95 @@ function Main() {
   }
 }
 
+function Footer(props = {}) {
+  const { pluralize = () => null, count = 0 } = props
+
+  const raw = {
+    tag: "footer",
+    options: {
+      classList: "footer",
+      children: [
+        {
+          tag: "span",
+          options: {
+            classList: "todo-count",
+            children: [
+              {
+                tag: "strong",
+                options: {
+                  textContent: count,
+                },
+              },
+              {
+                tag: "span",
+                options: {
+                  textContent: ` ${pluralize("item", 0)} left`,
+                },
+              },
+            ],
+          },
+        },
+        {
+          tag: "ul",
+          options: {
+            classList: "filters",
+            children: [
+              {
+                tag: "li",
+                options: {
+                  children: [
+                    {
+                      tag: "a",
+                      options: {
+                        href: "#/",
+                        textContent: "All",
+                        classList: "selected",
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                tag: "li",
+                options: {
+                  children: [
+                    {
+                      tag: "a",
+                      options: {
+                        href: "#/pending",
+                        textContent: "Compleated",
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                tag: "li",
+                options: {
+                  children: [
+                    {
+                      tag: "a",
+                      options: {
+                        href: "#/completed",
+                        textContent: "Completed",
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        }
+      ],
+    }
+  }
+
+  const element = Paradox.buildElement(raw.tag, raw.options)
+
+  return {
+    raw,
+    element,
+  }
+}
+
 console.log(sayHello("Hello"));
