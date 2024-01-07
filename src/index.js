@@ -157,6 +157,19 @@ function Footer(props = {}) {
     }
     link.addEventListener("click", handleFilter);
   });
+
+  function handleClearCompleted() {
+    const newData = setData({
+      tasks: data.tasks.filter((task) => !task.completed),
+      count: data.tasks.filter((task) => !task.completed).length,
+    });
+    Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
+  }
+  const clearCompleted = footer.querySelector(".clear-completed");
+  clearCompleted.style.display = data.tasks.some((task) => task.completed)
+    ? "block"
+    : "none";
+  clearCompleted.addEventListener("click", handleClearCompleted);
 }
 
 Paradox.pubsub.subscribe("mydayapp-js:store", (data) => {
