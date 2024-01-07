@@ -126,15 +126,9 @@ function Footer(props = {}) {
   }
 }
 
-const root = document.querySelector("#root");
-root.innerHTML = "";
-root.appendChild(Main().element);
-root.appendChild(Footer().element);
-
 const data = []
 function setData(newData = {}) {
   data.push(newData)
-  console.log(data)
   return data
 }
 
@@ -146,19 +140,33 @@ function generateRandomNumber() {
   return Number(randomNumber);
 }
 
-function handleNewTodoChange(ev) {
-  const { value:title } = ev.target;
-  if (!title) return;
-  const id = `${Date.now()}-${generateRandomNumber()}`;
-  const todo = {
-    id,
-    title,
-    completed: false,
-  };
-  const data = setData(todo);
+function render() {
+  const root = document.querySelector("#root");
+  root.innerHTML = "";
+  root.appendChild(Main().element);
+  root.appendChild(Footer().element);
+
+  function handleNewTodoChange(ev) {
+    const { value:title } = ev.target;
+    if (!title) return;
+    const id = `${Date.now()}-${generateRandomNumber()}`;
+    const todo = {
+      id,
+      title,
+      completed: false,
+    };
+    const data = setData(todo);
+    Paradox.pubsub.publish("mydayapp-js:new-todo", data);
+  }
+
+  const newTodo = document.querySelector("#new-todo");
+  newTodo.addEventListener("change", handleNewTodoChange);
+
+  console.log(sayHello("Hello"));
 }
 
-const newTodo = document.querySelector("#new-todo");
-newTodo.addEventListener("change", handleNewTodoChange);
+Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
+  console.log(data);
+});
 
-console.log(sayHello("Hello"));
+render();
