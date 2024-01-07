@@ -132,112 +132,31 @@ function Footer(props = {}) {
     Paradox.pubsub.publish("mydayapp-js:new-todo", finaleData);
   }
 
-  const raw = {
-    tag: "footer",
-    options: {
-      classList: "footer",
-      style: {
-        display: count ? "block" : "none",
-      },
-      children: [
-        {
-          tag: "span",
-          options: {
-            classList: "todo-count",
-            children: [
-              {
-                tag: "strong",
-                options: {
-                  text: count,
-                },
-              },
-              {
-                tag: "span",
-                options: {
-                  text: ` ${pluralize("item", count)} left`,
-                },
-              },
-            ],
-          },
-        },
-        {
-          tag: "ul",
-          options: {
-            classList: "filters",
-            children: [
-              {
-                tag: "li",
-                options: {
-                  children: [
-                    {
-                      tag: "a",
-                      options: {
-                        text: "All",
-                        classList: (!route.includes("#/pending") && !route.includes("#/completed" )) ? "selected" : "",
-                        events: {
-                          click: handleFilter,
-                        },
-                        attributes: {
-                          href: "#/",
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                tag: "li",
-                options: {
-                  children: [
-                    {
-                      tag: "a",
-                      options: {
-                        text: "Pending",
-                        classList: route.includes("#/pending") ? "selected" : "",
-                        events: {
-                          click: handleFilter,
-                        },
-                        attributes: {
-                          href: "#/pending",
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                tag: "li",
-                options: {
-                  children: [
-                    {
-                      tag: "a",
-                      options: {
-                        text: "Completed",
-                        classList: route.includes("#/completed") ? "selected" : "",
-                        events: {
-                          click: handleFilter,
-                        },
-                        attributes: {
-                          href: "#/completed",
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        }
-      ],
+  const footer = document.querySelector("#footer");
+  if (!count) {
+    footer.style.display = "none";
+    return;
+  }
+  const counter = footer.querySelector(".todo-count");
+  counter.innerHTML = "";
+  counter.appendChild(
+    Paradox.buildElement("strong", {
+      text: count,
+    })
+  );
+  counter.appendChild(
+    Paradox.buildElement("span", {
+      text: ` ${pluralize("item", count)} left`,
+    })
+  );
+  const links = footer.querySelectorAll("a");
+  links.forEach((link) => {
+    link.classList.remove("selected");
+    if (link.href === route) {
+      link.classList.add("selected");
     }
-  }
-
-  const element = Paradox.buildElement(raw.tag, raw.options)
-
-  return {
-    raw,
-    element,
-  }
+    link.addEventListener("click", handleFilter);
+  });
 }
 
 Paradox.pubsub.subscribe("mydayapp-js:store", (data) => {
@@ -276,9 +195,7 @@ function render(data) {
 
   const root = document.querySelector("#root");
   Main(data)
-  // root.innerHTML = "";
-  // root.appendChild(.element);
-  // root.appendChild(Footer(data).element);
+  Footer(data)
 }
 
 function handleNewTodoChange(ev) {
