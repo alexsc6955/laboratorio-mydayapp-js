@@ -32,6 +32,45 @@ function ListItem(props = {}) {
     Paradox.pubsub.publish("mydayapp-js:new-todo", newData); // Publish new data
   }
 
+  function quitEditingMode(item) {
+    item.classList.remove("editing");
+
+    const list = item.closest("ul").querySelectorAll("li");
+    list.forEach((li) => {
+      li.style.display = "block";
+    });
+  }
+
+  function editingMode(item) {
+    item.classList.add("editing");
+
+    const list = item.closest("ul").querySelectorAll("li");
+    list.forEach((li) => {
+      if (li !== item) {
+        li.style.display = "none";
+      }
+    });
+
+    function handleQuitEditing(ev) {
+      console.log("handleQuitEditing");
+      const { key } = ev;
+      if (key === "Escape") {
+        quitEditingMode(item);
+        document.removeEventListener("keyup", handleQuitEditing);
+      }
+    }
+    document.addEventListener("keyup", handleQuitEditing);
+    const input = item.querySelector(".edit");
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
+  }
+
+  function handleToggleEdit(ev) {
+    const { target } = ev;
+    const li = target.closest("li");
+    editingMode(li);
+  }
+
   // Prepare raw element tree for Paradox
   const raw = {
     tag: "li",
@@ -62,6 +101,9 @@ function ListItem(props = {}) {
               {
                 tag: "label",
                 options: {
+                  events: {
+                    click: handleToggleEdit,
+                  },
                   text: title,
                 },
               },
