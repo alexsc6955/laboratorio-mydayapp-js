@@ -123,6 +123,27 @@ function Main(props = {}) {
 function Footer(props = {}) {
   const { pluralize = () => null, count = 0, route = "#/" } = props
 
+  function handleFilter(ev) {
+    const { href } = ev.target;
+    const newData = setData({
+      route: href,
+    });
+    const hideTasks = newData.tasks.map((task) => {
+      if (href.includes("#/pending")) {
+        task.hidden = task.completed;
+      } else if (href.includes("#/completed")) {
+        task.hidden = !task.completed;
+      } else {
+        task.hidden = false;
+      }
+      return task;
+    });
+    const finaleData = setData({
+      tasks: hideTasks,
+    });
+    Paradox.pubsub.publish("mydayapp-js:new-todo", finaleData);
+  }
+
   const raw = {
     tag: "footer",
     options: {
@@ -163,9 +184,14 @@ function Footer(props = {}) {
                     {
                       tag: "a",
                       options: {
-                        href: "#/",
                         text: "All",
-                        classList: "selected",
+                        classList: (!route.includes("#/pending") && !route.includes("#/completed" )) ? "selected" : "",
+                        events: {
+                          click: handleFilter,
+                        },
+                        attributes: {
+                          href: "#/",
+                        },
                       },
                     },
                   ],
@@ -178,8 +204,14 @@ function Footer(props = {}) {
                     {
                       tag: "a",
                       options: {
-                        href: "#/pending",
-                        text: "Compleated",
+                        text: "Pending",
+                        classList: route.includes("#/pending") ? "selected" : "",
+                        events: {
+                          click: handleFilter,
+                        },
+                        attributes: {
+                          href: "#/pending",
+                        },
                       },
                     },
                   ],
@@ -192,8 +224,14 @@ function Footer(props = {}) {
                     {
                       tag: "a",
                       options: {
-                        href: "#/completed",
                         text: "Completed",
+                        classList: route.includes("#/completed") ? "selected" : "",
+                        events: {
+                          click: handleFilter,
+                        },
+                        attributes: {
+                          href: "#/completed",
+                        },
                       },
                     },
                   ],
@@ -262,6 +300,7 @@ function handleNewTodoChange(ev) {
     id,
     title,
     completed: false,
+    hidden: false,
   };
   const newData = setData({
     tasks: [...data?.tasks || [], todo],
