@@ -333,7 +333,7 @@ function handleCreateTodo(ev) {
 
 // select new todo input and add event listener
 const newTodo = document.querySelector("#new-todo");
-newTodo.addEventListener("keyup", handleCreateTodo);
+document.addEventListener("keyup", handleCreateTodo);
 
 // subscribe to new todo event that renders the app
 Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
