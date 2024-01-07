@@ -302,7 +302,7 @@ function handleNewTodoChange(ev) {
   const id = `${Date.now()}-${generateRandomNumber()}`;
   const todo = {
     id,
-    title,
+    title: title.trim(),
     completed: false,
     hidden: false,
   };
