@@ -141,7 +141,7 @@ function Footer(props = {}) {
   }
 
   footer.style.display = "block";
-  
+
   const counter = footer.querySelector(".todo-count");
   counter.innerHTML = "";
   counter.appendChild(
@@ -177,26 +177,9 @@ function Footer(props = {}) {
   clearCompleted.addEventListener("click", handleClearCompleted);
 }
 
-Paradox.pubsub.subscribe("mydayapp-js:store", (data) => {
-  localStorage.setItem("mydayapp-js:store", JSON.stringify(data));
-});
-
 
 function pluralize(word, count) {
   return count === 1 ? word : `${word}s`;
-}
-
-const initialData = {
-  tasks: [],
-  count: 0,
-  route: "#/",
-};
-
-const data = JSON.parse(localStorage.getItem("mydayapp-js:store")) || initialData;
-function setData(newData = {}) {
-  Object.assign(data, newData)
-  Paradox.pubsub.publish("mydayapp-js:store", data);
-  return data
 }
 
 function generateRandomNumber() {
@@ -215,27 +198,57 @@ function render(data) {
   Footer(data)
 }
 
-function handleNewTodoChange(ev) {
+// storage subscription that saves data to localStorage
+Paradox.pubsub.subscribe("mydayapp-js:store", (data) => {
+  localStorage.setItem("mydayapp-js:store", JSON.stringify(data));
+});
+
+// initial data
+const initialData = {
+  tasks: [],
+  count: 0,
+  route: "#/",
+};
+
+// get data from localStorage or use initial data
+const data = JSON.parse(localStorage.getItem("mydayapp-js:store")) || initialData;
+
+// set data
+function setData(newData = {}) {
+  Object.assign(data, newData) // merge data
+  Paradox.pubsub.publish("mydayapp-js:store", data); // publish data for storage
+  return data
+}
+
+function handleCreateTodo(ev) {
   const { target: { value:title }, key } = ev;
+
+  // Validation
   if (key !== "Enter") return;
   if (!title) return;
-  const id = `${Date.now()}-${generateRandomNumber()}`;
+  if (typeof title !== "string") return;
+
+  // Create todo
   const todo = {
-    id,
-    title: title.trim(),
+    id: `${Date.now()}-${generateRandomNumber()}`, // unique id
+    title: title.trim(), // remove spaces
     completed: false,
     hidden: false,
+    status: "pending",
   };
+  // Update data
   const newData = setData({
     tasks: [...data?.tasks || [], todo],
     count: data?.count + 1 || 1,
   });
+
+  // Publish data
   Paradox.pubsub.publish("mydayapp-js:new-todo", newData);
-  ev.target.value = "";
+  ev.target.value = ""; // clear input
 }
 
 const newTodo = document.querySelector("#new-todo");
-newTodo.addEventListener("keyup", handleNewTodoChange);
+newTodo.addEventListener("keyup", handleCreateTodo);
 
 Paradox.pubsub.subscribe("mydayapp-js:new-todo", (data) => {
   console.log(data);
