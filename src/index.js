@@ -60,9 +60,32 @@ function ListItem(props = {}) {
       }
     }
     document.addEventListener("keyup", handleQuitEditing);
+
+    function handleEdit(ev) {
+      console.log("handleEdit");
+      const { key, target } = ev;
+      if (key !== "Enter") return;
+
+      const { value: title } = target;
+      const { id } = item;
+
+      // Update data changing title
+      const newData = setData({
+        tasks: data.tasks.map((task) => {
+          console.log(task.id, id);
+          if (task.id === id) {
+            task.title = title;
+          }
+          return task;
+        }),
+      });
+      quitEditingMode(item);
+      Paradox.pubsub.publish("mydayapp-js:new-todo", newData); // Publish new data
+    }
     const input = item.querySelector(".edit");
     input.focus();
     input.setSelectionRange(input.value.length, input.value.length);
+    input.addEventListener("keyup", handleEdit);
   }
 
   function handleToggleEdit(ev) {
@@ -75,6 +98,7 @@ function ListItem(props = {}) {
   const raw = {
     tag: "li",
     options: {
+      id: id,
       classList: completed ? "completed" : "",
       style: {
         display: props.hidden ? "none" : "block",
