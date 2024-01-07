@@ -131,4 +131,34 @@ root.innerHTML = "";
 root.appendChild(Main().element);
 root.appendChild(Footer().element);
 
+const data = []
+function setData(newData = {}) {
+  data.push(newData)
+  console.log(data)
+  return data
+}
+
+function generateRandomNumber() {
+  let randomNumber = "" + Math.floor(Math.random() * 9 + 1);
+  for (let i = 0; i < 15; i++) {
+      randomNumber += Math.floor(Math.random() * 10);
+  }
+  return Number(randomNumber);
+}
+
+function handleNewTodoChange(ev) {
+  const { value:title } = ev.target;
+  if (!title) return;
+  const id = `${Date.now()}-${generateRandomNumber()}`;
+  const todo = {
+    id,
+    title,
+    completed: false,
+  };
+  const data = setData(todo);
+}
+
+const newTodo = document.querySelector("#new-todo");
+newTodo.addEventListener("change", handleNewTodoChange);
+
 console.log(sayHello("Hello"));
