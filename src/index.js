@@ -295,8 +295,7 @@ function render(data) {
 }
 
 function handleNewTodoChange(ev) {
-
-  const { value:title, key } = ev.target;
+  const { target: { value:title }, key } = ev;
   if (key !== "Enter") return;
   if (!title) return;
   const id = `${Date.now()}-${generateRandomNumber()}`;
