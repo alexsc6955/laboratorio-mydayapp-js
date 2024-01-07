@@ -1,8 +1,6 @@
 import "./css/base.css";
-import Paradox from "penrose-paradox"
 
-import { sayHello } from "./js/utils";
-import pubsub from "penrose-paradox/src/core/pubsub";
+import Paradox from "penrose-paradox"
 
 function ListItem(props = {}) {
   const { id, title, completed } = props
@@ -294,8 +292,6 @@ function render(data) {
   root.innerHTML = "";
   root.appendChild(Main(data).element);
   root.appendChild(Footer(data).element);
-
-  // console.log(sayHello("Hello"));
 }
 
 function handleNewTodoChange(ev) {
